@@ -1,7 +1,26 @@
 # Act.Framework Starter Kit
 Tooling for Setting Up Act.Framework development environment and projects on your local development machine
 
-## Usage
+## Getting Started for Beginners
+### Step 1
+Open up a shell and clone the project to a local directory
+
+```
+git clone https://github.com/actframework/act-starter-kit.git ~/act-starter-kit
+```
+
+### Step 2
+Start the starter-kit in interactive mode. 
+
+```
+cd ~/act-starter-kit
+./act-new.sh
+```
+
+### Step 3
+\#Win
+
+## Detailed Usage
 This little script will create everything you need to get an Act.Framework project set up so you can start writing code. The idea is that there are some basic conventions we agree to use with the structure of projects when using Act.Framework - and this script sets all that up for you without you needing to know everything beforehand.
 
 The Node.JS support is designed to allow Act.Framework to be used for modern web development easily. All you need to do is turn on Node.JS support when you set up a project and the script will set up everything you need to start making a web application with a full Javascript build pipeline as well as Act - all in one. We started using this convention when we developed the Act.Framework website and it worked so well, we have made it a defacto standard.
