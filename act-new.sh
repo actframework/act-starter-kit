@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 echo "---------------------------------"
 echo "Act.Framework Project Starter Kit"
 echo "---------------------------------"
@@ -79,9 +80,33 @@ esac
 done
 
 #verify we have parameters to work with...chances are user has no idea if these are blank. Let them use -? without blowing anything up.
+#or go into interactive mode!
 if [[ "${PROJECTPATH}" == '' ]] || [[ "${PROJECTNAME}" == '' ]] || [[ "${ORGNAME}" == '' ]];
     then
-        exit
+    echo "Act.Framework Interactive Project Setup..."
+    echo 
+    echo -n "Enter the directory for the new project: "
+    read PROJECTPATH
+    echo
+    echo -n "Enter the name of this project (lower case name): "
+    read PROJECTNAME
+    echo
+    echo -n "Enter the organisation package name (Java style like com.google.utilities): "
+    read ORGNAME
+    echo
+    echo -n "Would you like to use the Rythm templating engine with this project? [y/n]: "
+    read -n 1 userythm
+    echo 
+    echo -n "Would you like to use Node.JS and Gulp with this project? [y/n]: "
+    read -n 1 usenode
+    if [[ "${usenode}" == 'y' ]] ;
+        then
+        NODE=YES
+    fi
+    if [[ "${userythm}" == 'y' ]] ;
+        then
+        RYTHM=YES
+    fi
 fi
 
 
