@@ -20,6 +20,21 @@ cd ~/act-starter-kit
 ### Step 3
 \#Win
 
+## Using Act.Framework on Windows
+We recommend using the awesome [Babun](http://babun.github.io/) as your command-line environment. 
+
+We have successfully developed multiple Act.Framework projects that used Node.JS, MongoDB and Act.Framework on Java 7 and Java 8 with Babun as the shell environment. 
+
+In fact, we were able to have heterogenious environments between Mac, Linux and Windows developers - that is, nobody had to modify anything within their code or configuration to check out code developed by a Mac or Linux user when on Windows. Sweet!
+
+This starter kit should also run on [Babun](http://babun.github.io/) without modification. You may need to install curl as follows since that is not installed by default:
+
+```
+pact install curl
+```
+
+
+
 ## Detailed Usage
 This little script will create everything you need to get an Act.Framework project set up so you can start writing code. The idea is that there are some basic conventions we agree to use with the structure of projects when using Act.Framework - and this script sets all that up for you without you needing to know everything beforehand.
 
