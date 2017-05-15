@@ -32,6 +32,10 @@ case $i in
     PROJECTPATH="${i#*=}"
     shift # past argument=value
     ;;
+    -v=*|--version=*)
+    MYACTVERSION="${i#*=}"
+    shift # past argument=value
+    ;;
     --node)
     NODE=YES
     shift # past argument with no value
@@ -48,7 +52,10 @@ case $i in
         echo "The Node.JS support is designed to allow Act.Framework to be used for modern web development easily. All you need to do is turn on Node.JS support when you set up a project and the script will set up everything you need to start making a web application with a full Javascript build pipeline as well as Act - all in one. We started using this convention when we developed the Act.Framework website and it worked so well, we have made it a defacto standard."
         echo ""
         echo ""
-        echo "act-new.sh [--node --rythm] -p=<full-project-path> -n=<project name> -o=<organisation/package name>"
+        echo "act-new.sh [--node --rythm] [-v=<act version>]  -p=<full-project-path> -n=<project name> -o=<organisation/package name>"
+        echo ""
+        echo "--version=<act version>"
+        echo "This is an optional field. It will set the version being called from Maven. If you leave it blank, the script will query Maven to get the latest version and use that."
         echo ""
         echo "--node"
         echo "Insert node.js compatibility and build pipeline"
@@ -208,7 +215,13 @@ cp ${RSRCDIR}/root/run_prod ./
 chmod u+x ./run_prod
 cp ${RSRCDIR}/root/setup_project ./
 chmod u+x ./setup_project
-sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" ${RSRCDIR}/root/pom.xml >./pom.xml
+
+echo -n "."
+curl https://repo.maven.apache.org/maven2/org/actframework/act/maven-metadata.xml >act_version.tmp
+ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
+sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" -e "s/ActVersion/${ACTVERSION}/" ${RSRCDIR}/root/pom.xml >./pom.xml
+rm act_version.tmp
+
 
 echo "OK"
 
