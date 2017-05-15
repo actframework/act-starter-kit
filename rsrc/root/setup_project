@@ -1,0 +1,5 @@
+#!/bin/sh
+echo "If the script fails, try running as sudo"
+npm install
+gulp
+mvn clean compile 

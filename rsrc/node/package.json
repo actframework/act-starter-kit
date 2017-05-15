@@ -1,0 +1,42 @@
+{
+  "name": "ProjectName",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Joe Cincotta <joe@thinking.group>",
+  "contributors": [
+    {
+      "name": "Joe Cincotta",
+      "email": "joe@thinking.group"
+    },
+    {
+      "name": "Gelin Luo",
+      "email": "green@thinking.group"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/actframework/"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^1.11.3",
+  },
+  "private": true,
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-cache": "^0.4.5",
+    "gulp-clip-empty-files": "^0.1.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-jshint": "^2.0.4",
+    "gulp-less": "^3.1.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-notify": "^3.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.1",
+    "jshint": "^2.9.4"
+  }
+}
