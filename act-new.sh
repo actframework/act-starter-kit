@@ -17,8 +17,8 @@ if [[ "${BASEDIR}" == '.' ]]; then
 fi
 RSRCDIR=`eval echo "${BASEDIR}/rsrc"`
 MYACTVERSION=""
-
-
+NODE=NO
+RYTHM=NO
 
 for i in "$@"
 do
@@ -101,22 +101,44 @@ if [[ "${PROJECTPATH}" == '' ]] || [[ "${PROJECTNAME}" == '' ]] || [[ "${ORGNAME
     echo 
     echo -n "Would you like to use Node.JS and Gulp with this project? [y/n]: "
     read -n 1 usenode
-    if [[ "${usenode}" == 'y' ]] ;
-        then
+    if [[ "${usenode}" == 'y' ]] ; then
         NODE=YES
     fi
-    if [[ "${userythm}" == 'y' ]] ;
-        then
+    if [[ "${userythm}" == 'y' ]] ; then
         RYTHM=YES
     fi
 fi
 
-
+echo
+echo
 echo -n "Working"
 
-#Fix project path (expand ~ if there is one...)
+#Fix project path (expand ~ if there is one... and deal with relative path)
 tempProjectPath=${PROJECTPATH}
-PROJECTPATH=`eval echo "${tempProjectPath}"`
+if [[ ${tempProjectPath:0:1} == "~" ]] || [[ ${tempProjectPath:0:1} == "/" ]]; then 
+    PROJECTPATH=`eval echo "${tempProjectPath}"`
+else
+    PROJECTPATH="$(pwd)"/"${PROJECTPATH}"
+fi
+
+
+#fix package name and project name convergance, remove situations where the project name is also on the end of the package name
+tmpoutput=""
+IFS='.' read -r -a array <<< "$ORGNAME"
+arraysize=${#array[@]}
+lastindex=$(expr $arraysize - 1)
+if [[ "${array[$lastindex]}" == "$PROJECTNAME" ]]; then
+    for (( i=0; i<${lastindex}; i++ ));
+    do
+        if [[ $i == 0 ]]; then
+            tmpoutput="${array[$i]}"
+        else
+            tmpoutput="${tmpoutput}.${array[$i]}"
+        fi
+    done
+    ORGNAME=${tmpoutput}
+fi
+
 
 #create project dir
 echo -n "."
@@ -173,7 +195,7 @@ mkdir conf
 cd conf
 mkdir common
 cd common
-touch app.properties
+echo "i18n=true" >app.properties
 
 #create resources files in top level dir structure
 echo -n "."
@@ -198,7 +220,7 @@ do
 done
 mkdir ${PROJECTNAME}
 cd ${PROJECTNAME}
-sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" ${RSRCDIR}/java/App.java >./App.java
+sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" ${RSRCDIR}/java/Application.java >./Application.java
 
 if [[ "${RYTHM}" == 'YES' ]];
     then
@@ -217,8 +239,8 @@ if [[ "${RYTHM}" == 'YES' ]];
         cd ${PROJECTNAME}
         #create the Rythm base template
         echo -n "."
-        mkdir App
-        cd App
+        mkdir Application
+        cd Application
         sed "s/ProjectName/${PROJECTNAME}/" ${RSRCDIR}/rythm/home.html >./home.html
         #create global import for Rythm
         cd ${PROJECTPATH}/src/main/resources/rythm/
