@@ -20,6 +20,16 @@ cd ~/act-starter-kit
 ### Step 3
 \#Win
 
+## Using the Installer
+The installer is a simple script that will check all the directories and commands are in their proper place, and then add the *act-new.sh* command to the path for your shell. You do not need to use this installer to use act-new.sh - it's there to make life a little easier for you.
+
+To use the installer (based on the above getting started instructions):
+
+```
+cd ~/act-starter-kit
+./installer.sh
+```
+
 ## Using Act.Framework on Windows
 We recommend using the awesome [Babun](http://babun.github.io/) as your command-line environment. 
 
@@ -75,8 +85,6 @@ act-new.sh --node --rythm -p=~/development/hello-world -n=hello-world -o=com.myc
 ```
 ## Interactive Mode
 If you don't use any command line switches when calling the *act-new.sh* script, you will get the interactive mode to walk you through the setup. 
-
-The only thing you should know is that I have noticed that the ~ for local profile directory does not seem toget parsed properly in the interactive mode.
 
 ## Overview of the Directory Structures
 
