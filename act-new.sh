@@ -1,5 +1,5 @@
 #!/bin/bash
-clear
+echo 
 echo "---------------------------------"
 echo "Act.Framework Project Starter Kit"
 echo "---------------------------------"
@@ -7,7 +7,7 @@ echo ""
 echo "(C)2017 Thinking.Studio "
 echo "Written by J.Cincotta"
 echo ""
-echo "use -? for help."
+echo "Use -? for help with command-line usage. Use this script without options for interactive (wizard) mode."
 echo ""
 
 #Set script dirs
@@ -18,6 +18,7 @@ if [[ "${BASEDIR}" == '.' ]];
 fi
 RSRCDIR=`eval echo "${BASEDIR}/rsrc"`
 
+MYACTVERSION=""
 
 for i in "$@"
 do
@@ -49,7 +50,7 @@ case $i in
 
     -?|--help)
         echo ""
-        echo "This little script will create everything you need to get an Act.Framework project set up so you can start writing code. The idea is that there are some basic conventions we agree to use with the structure of projects when using Act.Framework - and this script sets all that up for you without you needing to know everything beforehand."
+        echo "This wizard will create everything you need to get an Act.Framework project set up so you can start writing code. The idea is that there are some basic conventions we agree to use with the structure of projects when using Act.Framework - and this script sets all that up for you without you needing to know everything beforehand."
         echo ""
         echo "The Node.JS support is designed to allow Act.Framework to be used for modern web development easily. All you need to do is turn on Node.JS support when you set up a project and the script will set up everything you need to start making a web application with a full Javascript build pipeline as well as Act - all in one. We started using this convention when we developed the Act.Framework website and it worked so well, we have made it a defacto standard."
         echo ""
@@ -224,8 +225,7 @@ if [[ "${RYTHM}" == 'YES' ]];
         sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" ${RSRCDIR}/rythm/__global.rythm >./__global.rythm
 fi
 
-if [[ "${NODE}" == 'YES' ]];
-    then
+if [[ "${NODE}" == 'YES' ]]; then
         #Setup Node.JS support
         echo -n "."
         cd ${PROJECTPATH}/
@@ -246,14 +246,27 @@ chmod u+x ./run_prod
 cp ${RSRCDIR}/root/setup_project ./
 chmod u+x ./setup_project
 
-if [[ "${NODE}" == 'YES' ]];
 echo -n "."
-curl https://repo.maven.apache.org/maven2/org/actframework/act/maven-metadata.xml >act_version.tmp
-ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
+if [[ "${MYACTVERSION}" == '' ]]; then
+    echo -n "."
+    curl -sS https://repo.maven.apache.org/maven2/org/actframework/act/maven-metadata.xml >act_version.tmp
+    ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
+    rm act_version.tmp
+else
+    ACTVERSION=${MYACTVERSION}
+fi
+
+echo -n "."
 sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" -e "s/ActVersion/${ACTVERSION}/" ${RSRCDIR}/root/pom.xml >./pom.xml
-rm act_version.tmp
 
-
-echo "OK"
-
+echo
+echo "-------------------"
+echo "New Project Summary"
+echo "-------------------"
+echo "Project location: ${PROJECTPATH}"
+echo "Package name: ${ORGNAME}.${PROJECTNAME}"
+echo "Configured to use Act.Framework version ${ACTVERSION}"
+echo "Node.JS and Gulp support: ${NODE}"
+echo "Rythm Template Engine suport: ${RYTHM}"
+echo
 
