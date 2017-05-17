@@ -18,9 +18,6 @@ fi
 RSRCDIR=`eval echo "${BASEDIR}/rsrc"`
 MYACTVERSION=""
 
-echo $BASEDIR
-echo $RSRCDIR
-exit
 
 
 for i in "$@"
