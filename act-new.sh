@@ -16,7 +16,8 @@ if [[ "${BASEDIR}" == '.' ]];
     then
         BASEDIR=`pwd`
 fi
-RSRCDIR=${BASEDIR}/rsrc
+RSRCDIR=`eval echo "${BASEDIR}/rsrc"`
+
 
 for i in "$@"
 do
@@ -111,6 +112,10 @@ fi
 
 
 echo -n "Working"
+
+#Fix project path (expand ~ if there is one...)
+tempProjectPath=${PROJECTPATH}
+PROJECTPATH=`eval echo "${tempProjectPath}"`
 
 #create project dir
 echo -n "."
@@ -241,6 +246,7 @@ chmod u+x ./run_prod
 cp ${RSRCDIR}/root/setup_project ./
 chmod u+x ./setup_project
 
+if [[ "${NODE}" == 'YES' ]];
 echo -n "."
 curl https://repo.maven.apache.org/maven2/org/actframework/act/maven-metadata.xml >act_version.tmp
 ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
