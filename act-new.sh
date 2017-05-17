@@ -11,14 +11,17 @@ echo "Use -? for help with command-line usage. Use this script without options f
 echo ""
 
 #Set script dirs
-BASEDIR=`dirname $0`
-if [[ "${BASEDIR}" == '.' ]];
-    then
-        BASEDIR=`pwd`
+BASEDIR=`eval echo "$(dirname "$(readlink "$0")")"`
+if [[ "${BASEDIR}" == '.' ]]; then
+    BASEDIR="$(cd "$(dirname "$0")" && pwd)"
 fi
 RSRCDIR=`eval echo "${BASEDIR}/rsrc"`
-
 MYACTVERSION=""
+
+echo $BASEDIR
+echo $RSRCDIR
+exit
+
 
 for i in "$@"
 do
