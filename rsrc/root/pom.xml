@@ -25,13 +25,13 @@
 
   <name>ProjectName</name>
   <description>Description of your application goes here</description>
-  <url>http://thinking.studio</url>
+  <url>https://thinking.studio</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <act.version>ActVersion</act.version>
-    <app.entry>PackageName.ProjectName.Application</app.entry>
+    <app.entry>PackageName.Application</app.entry>
   </properties>
 
   <licenses>

@@ -1,4 +1,4 @@
-package PackageName.ProjectName;
+package PackageName;
 
 import act.Act;
 import org.osgl.mvc.annotation.GetAction;
