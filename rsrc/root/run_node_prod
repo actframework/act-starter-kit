@@ -1,6 +1,7 @@
 #!/bin/sh
 if [ ! -f target/dist/start ]; then
-    mvn clean compile package
+	gulp
+	mvn clean compile package
     cd target/dist
     unzip *.zip
 else

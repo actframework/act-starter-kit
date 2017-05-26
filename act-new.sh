@@ -258,15 +258,22 @@ if [[ "${NODE}" == 'YES' ]]; then
         sed "s/ProjectName/${PROJECTNAME}/" ${RSRCDIR}/node/package.json >./package.json
 fi
 
-#Setup Act.Framework project commands
+#Setup Act.Framework project commands (based on project configuration)
 echo -n "."
 cd ${PROJECTPATH}/
-cp ${RSRCDIR}/root/run_dev ./
-chmod u+x ./run_dev
-cp ${RSRCDIR}/root/run_prod ./
-chmod u+x ./run_prod
-cp ${RSRCDIR}/root/setup_project ./
-chmod u+x ./setup_project
+if [[ "${NODE}" == 'YES' ]]; then
+    cp ${RSRCDIR}/root/run_node_dev ./run_dev
+    chmod u+x ./run_dev
+    cp ${RSRCDIR}/root/run_node_prod ./run_prod
+    chmod u+x ./run_prod
+    cp ${RSRCDIR}/root/setup_project ./
+    chmod u+x ./setup_project
+else
+    cp ${RSRCDIR}/root/run_dev ./
+    chmod u+x ./run_dev
+    cp ${RSRCDIR}/root/run_prod ./
+    chmod u+x ./run_prod
+fi
 
 echo -n "."
 if [[ "${MYACTVERSION}" == '' ]]; then
