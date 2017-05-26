@@ -83,7 +83,7 @@ done
 
 #verify we have parameters to work with...chances are user has no idea if these are blank. Let them use -? without blowing anything up.
 #or go into interactive mode!
-if [[ "${PROJECTPATH}" == '' ]] || [[ "${PROJECTNAME}" == '' ]] || [[ "${ORGNAME}" == '' ]];
+if [[ "${PROJECTPATH}" == '' ]] || [[ "${PROJECTNAME}" == '' ]] ;
     then
     echo "Act.Framework Interactive Project Setup..."
     echo 
@@ -123,20 +123,28 @@ fi
 
 
 #fix package name and project name convergance, remove situations where the project name is also on the end of the package name
-tmpoutput=""
-IFS='.' read -r -a array <<< "$ORGNAME"
-arraysize=${#array[@]}
-lastindex=$(expr $arraysize - 1)
-if [[ "${array[$lastindex]}" == "$PROJECTNAME" ]]; then
-    for (( i=0; i<${lastindex}; i++ ));
-    do
-        if [[ $i == 0 ]]; then
-            tmpoutput="${array[$i]}"
-        else
-            tmpoutput="${tmpoutput}.${array[$i]}"
-        fi
-    done
-    ORGNAME=${tmpoutput}
+if [[ "${ORGNAME}" != "" ]]; then
+    tmpoutput=""
+    IFS='.' read -r -a array <<< "$ORGNAME"
+    arraysize=${#array[@]}
+    lastindex=$(expr $arraysize - 1)
+    if [[ "${array[$lastindex]}" == "$PROJECTNAME" ]]; then
+        for (( i=0; i<${lastindex}; i++ ));
+        do
+            if [[ $i == 0 ]]; then
+                tmpoutput="${array[$i]}"
+            else
+                tmpoutput="${tmpoutput}.${array[$i]}"
+            fi
+        done
+        ORGNAME=${tmpoutput}
+    fi
+fi
+
+if [[ "${ORGNAME}" == "" ]]; then
+    PACKAGENAME="${PROJECTNAME}"
+else
+    PACKAGENAME="${ORGNAME}.${PROJECTNAME}"
 fi
 
 
@@ -220,7 +228,7 @@ do
 done
 mkdir ${PROJECTNAME}
 cd ${PROJECTNAME}
-sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" ${RSRCDIR}/java/Application.java >./Application.java
+sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${PACKAGENAME}/" ${RSRCDIR}/java/Application.java >./Application.java
 
 if [[ "${RYTHM}" == 'YES' ]];
     then
@@ -244,7 +252,7 @@ if [[ "${RYTHM}" == 'YES' ]];
         sed "s/ProjectName/${PROJECTNAME}/" ${RSRCDIR}/rythm/home.html >./home.html
         #create global import for Rythm
         cd ${PROJECTPATH}/src/main/resources/rythm/
-        sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" ${RSRCDIR}/rythm/__global.rythm >./__global.rythm
+        sed -e "s/PackageName/${PACKAGENAME}/" ${RSRCDIR}/rythm/__global.rythm >./__global.rythm
 fi
 
 if [[ "${NODE}" == 'YES' ]]; then
@@ -286,7 +294,7 @@ else
 fi
 
 echo -n "."
-sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${ORGNAME}/" -e "s/ActVersion/${ACTVERSION}/" ${RSRCDIR}/root/pom.xml >./pom.xml
+sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${PACKAGENAME}/" -e "s/ActVersion/${ACTVERSION}/" ${RSRCDIR}/root/pom.xml >./pom.xml
 
 echo
 echo "-------------------"
