@@ -132,6 +132,12 @@
       <version>${act.version}</version>
     </dependency>
 
+<!-- ACT MODULES Do not delete or edit this tag -->
+
+
+
+<!-- END ACT MODULES Do not delete or edit this tag -->
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>

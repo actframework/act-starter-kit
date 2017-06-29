@@ -1,0 +1,6 @@
+    
+    <dependency>
+      <groupId>org.actframework</groupId>
+      <artifactId>aId</artifactId>
+      <version>aVer</version>
+    </dependency>
