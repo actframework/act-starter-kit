@@ -350,7 +350,7 @@ if [[ "${MYACTVERSION}" == '' ]]; then
     echo -n "."
     curl -sS https://repo.maven.apache.org/maven2/org/actframework/act-starter-parent/maven-metadata.xml >act_version.tmp
     #ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
-    ACTVERSION=1.6.0.2 #TODO the hardcode is a special case, it will be turned off once act-starter-parent released 1.6.1.1 version
+    ACTVERSION=1.6.0.3 #TODO the hardcode is a special case, it will be turned off once act-starter-parent released 1.6.1.1 version
     rm act_version.tmp
 else
     ACTVERSION=${MYACTVERSION}
