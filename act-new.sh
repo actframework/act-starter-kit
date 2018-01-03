@@ -158,28 +158,10 @@ echo -n "."
 mkdir src
 cd ${PROJECTPATH}/src/
 
-#standard assembly 
-echo -n "."
-mkdir assembly
-cd assembly 
-cp ${RSRCDIR}/assembly/* ./
-
 #main dir structure
 echo -n "."
 cd ${PROJECTPATH}/src/
 mkdir main
-
-#standard binary launchers for win and unix 
-echo -n "."
-cd ${PROJECTPATH}/src/main/
-mkdir bin
-cd bin
-cp ${RSRCDIR}/bin/run ./
-chmod u+x ./run
-cp ${RSRCDIR}/bin/start ./
-chmod u+x ./start
-cp ${RSRCDIR}/bin/run.bat ./
-cp ${RSRCDIR}/bin/start.bat ./
 
 #create resources dir structure
 echo -n "."
@@ -201,19 +183,99 @@ echo -n "."
 cd ${PROJECTPATH}/src/main/resources/
 mkdir conf
 cd conf
-mkdir common
-cd common
 echo "i18n=true" >app.properties
+echo "#common db configuration" >db.properties
+echo "" >>db.properties
+echo "## uncomment for mongodb project" >>db.properties
+echo "#db.impl=act.db.morphia.MorphiaPlugin" >>db.properties
+echo "#db.uri=mongodb://localhost/mydb?maxPoolSize=256" >>db.properties
+echo "" >>db.properties
+echo "## uncomment for sql project" >>db.properties
+echo "#db.impl=act.db.ebean2.EbeanPlugin" >>db.properties
+echo "#db.url=jdbc:mysql://localhost:3306/mydb" >>db.properties
+echo "#db.username=<username>" >>db.properties
+echo "#db.password=<password>" >>db.properties
+
+_PROFILE='prod'
+cd ${PROJECTPATH}/src/main/resources/conf/
+mkdir $_PROFILE
+cd $_PROFILE
+echo "#general $_PROFILE configuration" >app.properties
+
+echo "#$_PROFILE db configuration" >db.properties
+echo "" >>db.properties
+echo "## uncomment for mongodb project" >>db.properties
+echo "#db.impl=act.db.morphia.MorphiaPlugin" >>db.properties
+echo "#db.uri=mongodb://localhost/mydb?maxPoolSize=256" >>db.properties
+echo "" >>db.properties
+echo "## uncomment for sql project" >>db.properties
+echo "#db.impl=act.db.ebean2.EbeanPlugin" >>db.properties
+echo "#db.url=jdbc:mysql://localhost:3306/mydb" >>db.properties
+echo "#db.username=<username>" >>db.properties
+echo "#db.password=<password>" >>db.properties
+
+echo "#$_PROFILE mail configuration" >mail.properties
+echo "#mailer.from=support@mycompany.com" >>mail.properties
+echo "" >>mail.properties
+echo "#mailer.smtp.username=<your-smtp-service-user-name>" >>mail.properties
+echo "#mailer.smtp.password=<your-smtp-service-password>" >>mail.properties
+echo "#mailer.smtp.host=<your-smtp-service-host>" >>mail.properties
+echo "#mailer.smtp.port=587" >>mail.properties
+echo "#mailer.smtp.tls=true" >>mail.properties
+echo "#mailer.smtp.ssl=false" >>mail.properties
+
+_PROFILE='uat'
+cd ${PROJECTPATH}/src/main/resources/conf/
+mkdir $_PROFILE
+cd $_PROFILE
+echo "#general $_PROFILE configuration" >app.properties
+
+echo "#$_PROFILE db configuration" >db.properties
+echo "" >>db.properties
+echo "## uncomment for mongodb project" >>db.properties
+echo "#db.impl=act.db.morphia.MorphiaPlugin" >>db.properties
+echo "#db.uri=mongodb://localhost/mydb?maxPoolSize=256" >>db.properties
+echo "" >>db.properties
+echo "## uncomment for sql project" >>db.properties
+echo "#db.impl=act.db.ebean2.EbeanPlugin" >>db.properties
+echo "#db.url=jdbc:mysql://localhost:3306/mydb" >>db.properties
+echo "#db.username=<username>" >>db.properties
+echo "#db.password=<password>" >>db.properties
+
+echo "#$_PROFILE mail configuration" >mail.properties
+echo "#mailer.from=support@mycompany.com" >>mail.properties
+echo "" >>mail.properties
+echo "#mailer.smtp.username=<your-smtp-service-user-name>" >>mail.properties
+echo "#mailer.smtp.password=<your-smtp-service-password>" >>mail.properties
+echo "#mailer.smtp.host=<your-smtp-service-host>" >>mail.properties
+echo "#mailer.smtp.port=587" >>mail.properties
+echo "#mailer.smtp.tls=true" >>mail.properties
+echo "#mailer.smtp.ssl=false" >>mail.properties
 
 #create resources files in top level dir structure
 echo -n "."
 cd ${PROJECTPATH}/src/main/resources/
-cp ${RSRCDIR}/resources/app.version ./
-cp ${RSRCDIR}/resources/logback.xml ./
 touch routes.conf
 touch messages.properties
 touch messages_en.properties
 touch messages_zh_CN.properties
+
+#create .version file
+echo -n "."
+cd ${PROJECTPATH}/src/main/resources/
+IFS='.' read -r -a array <<< "$ORGNAME"
+for element in "${array[@]}"
+do
+    mkdir "$element"
+    cd "$element"
+done
+cp ${RSRCDIR}/resources/.version ./
+
+#create logback.xml file
+echo -n "."
+cd ${PROJECTPATH}/src/main/resources/
+sed -e "s/PackageName/${PACKAGENAME}/" ${RSRCDIR}/resources/logback.xml >./logback.xml
+
 
 #create Java path and initial controller
 echo -n "."
@@ -228,7 +290,7 @@ do
 done
 mkdir ${PROJECTNAME}
 cd ${PROJECTNAME}
-sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${PACKAGENAME}/" ${RSRCDIR}/java/Application.java >./Application.java
+sed -e "s/ProjectName/${PROJECTNAME}/" -e "s/PackageName/${PACKAGENAME}/" ${RSRCDIR}/java/AppEntry.java >./AppEntry.java
 
 if [[ "${RYTHM}" == 'YES' ]];
     then
@@ -247,8 +309,8 @@ if [[ "${RYTHM}" == 'YES' ]];
         cd ${PROJECTNAME}
         #create the Rythm base template
         echo -n "."
-        mkdir Application
-        cd Application
+        mkdir AppEntry
+        cd AppEntry
         sed "s/ProjectName/${PROJECTNAME}/" ${RSRCDIR}/rythm/home.html >./home.html
         #create global import for Rythm
         cd ${PROJECTPATH}/src/main/resources/rythm/
@@ -286,8 +348,9 @@ fi
 echo -n "."
 if [[ "${MYACTVERSION}" == '' ]]; then
     echo -n "."
-    curl -sS https://repo.maven.apache.org/maven2/org/actframework/act/maven-metadata.xml >act_version.tmp
-    ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
+    curl -sS https://repo.maven.apache.org/maven2/org/actframework/act-starter-parent/maven-metadata.xml >act_version.tmp
+    #ACTVERSION=$(awk -F '[<>]' '/latest/{print $3}' act_version.tmp)
+    ACTVERSION=1.6.0.2 #TODO the hardcode is a special case, it will be turned off once act-starter-parent released 1.6.1.1 version
     rm act_version.tmp
 else
     ACTVERSION=${MYACTVERSION}
