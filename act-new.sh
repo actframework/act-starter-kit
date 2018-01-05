@@ -269,6 +269,8 @@ do
     mkdir "$element"
     cd "$element"
 done
+mkdir $PROJECTNAME
+cd $PROJECTNAME
 cp ${RSRCDIR}/resources/.version ./
 
 #create logback.xml file
